@@ -1,3 +1,5 @@
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, CreditCard, ShieldAlert, User as UserIcon } from 'lucide-react';
 
 const Sidebar = () => {
