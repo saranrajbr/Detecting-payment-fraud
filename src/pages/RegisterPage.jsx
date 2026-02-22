@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import API from '../services/api';
 
 const RegisterPage = () => {
-    const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'user' });
+    const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -52,17 +52,6 @@ const RegisterPage = () => {
                             value={formData.password}
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                         />
-                    </div>
-                    <div className="form-group" style={{ marginBottom: '2rem' }}>
-                        <label className="form-label">Role</label>
-                        <select
-                            className="form-input"
-                            value={formData.role}
-                            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                        >
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
                     </div>
                     <button type="submit" className="btn-primary btn-full">
                         Register

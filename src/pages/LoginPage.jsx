@@ -14,7 +14,12 @@ const LoginPage = () => {
             const { data } = await API.post('/auth/login', { email, password });
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
-            navigate('/dashboard');
+
+            if (data.user.role === 'admin') {
+                navigate('/dashboard');
+            } else {
+                navigate('/simulate');
+            }
             window.location.reload();
         } catch (err) {
             setError(err.response?.data?.error || 'Login failed');

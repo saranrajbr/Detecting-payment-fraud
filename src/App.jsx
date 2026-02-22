@@ -11,7 +11,9 @@ import Sidebar from './components/Sidebar';
 import './App.css';
 
 const App = () => {
+    const user = JSON.parse(localStorage.getItem('user'));
     const isAuthenticated = !!localStorage.getItem('token');
+    const isAdmin = user?.role === 'admin';
 
     return (
         <Router>
@@ -26,7 +28,7 @@ const App = () => {
                             <Route path="/register" element={<RegisterPage />} />
                             <Route
                                 path="/dashboard"
-                                element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
+                                element={isAuthenticated ? (isAdmin ? <Dashboard /> : <Navigate to="/simulate" />) : <Navigate to="/login" />}
                             />
                             <Route
                                 path="/simulate"
@@ -34,7 +36,7 @@ const App = () => {
                             />
                             <Route
                                 path="/admin"
-                                element={isAuthenticated ? <AdminPanel /> : <Navigate to="/login" />}
+                                element={isAuthenticated ? (isAdmin ? <AdminPanel /> : <Navigate to="/simulate" />) : <Navigate to="/login" />}
                             />
                         </Routes>
                     </main>

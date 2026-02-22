@@ -6,14 +6,31 @@ const TransactionSimulation = () => {
     const [formData, setFormData] = useState({
         amount: '',
         location: 'Chennai, India',
-        deviceType: 'iPhone 15',
+        deviceType: 'Mobile App (iPhone 15)',
         merchantCategory: 'UPI Payment',
-        ipAddress: '103.117.20.1',
+        ipAddress: 'Loading...',
         paymentMethod: 'UPI',
         transactionTime: 'Noon'
     });
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [detectingIP, setDetectingIP] = useState(true);
+
+    React.useEffect(() => {
+        const detectIP = async () => {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                setFormData(prev => ({ ...prev, ipAddress: data.ip }));
+            } catch (err) {
+                console.error('IP detection failed', err);
+                setFormData(prev => ({ ...prev, ipAddress: '103.117.20.1' })); // Fallback to Indian IP
+            } finally {
+                setDetectingIP(false);
+            }
+        };
+        detectIP();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -74,13 +91,21 @@ const TransactionSimulation = () => {
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">IP Address</label>
+                            <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                IP Address
+                                {detectingIP ? (
+                                    <span className="badge-detecting">Detecting...</span>
+                                ) : (
+                                    <span className="badge-detected">Auto-detected</span>
+                                )}
+                            </label>
                             <input
                                 type="text"
                                 className="form-input"
                                 value={formData.ipAddress}
                                 onChange={(e) => setFormData({ ...formData, ipAddress: e.target.value })}
                                 placeholder="e.g. 103.117.x.x"
+                                disabled={detectingIP}
                             />
                             <small className="help-text">Indian IPs: 49.x, 103.x, 106.x, 117.x</small>
                         </div>
@@ -110,8 +135,10 @@ const TransactionSimulation = () => {
                         <div className="form-group">
                             <label className="form-label">Device & Terminal</label>
                             <select className="form-input" value={formData.deviceType} onChange={(e) => setFormData({ ...formData, deviceType: e.target.value })}>
-                                <option value="Mobile App (iOS/Android)">Mobile App (iOS/Android)</option>
-                                <option value="Web Browser">Desktop Browser</option>
+                                <option value="Mobile App (iPhone 15)">Mobile App (iPhone 15)</option>
+                                <option value="Samsung Galaxy M34">Samsung Galaxy M34 (India)</option>
+                                <option value="OnePlus 11R">OnePlus 11R (India)</option>
+                                <option value="Desktop Browser">Desktop Browser</option>
                                 <option value="POS Terminal">POS Terminal</option>
                                 <option value="Emulator">Emulator (High Risk)</option>
                             </select>
