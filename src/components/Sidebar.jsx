@@ -1,6 +1,4 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, CreditCard, ShieldAlert, Settings } from 'lucide-react';
+import { LayoutDashboard, CreditCard, ShieldAlert, User as UserIcon } from 'lucide-react';
 
 const Sidebar = () => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -8,6 +6,7 @@ const Sidebar = () => {
     const navItems = [
         { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
         { name: 'Simulate', path: '/simulate', icon: <CreditCard size={20} /> },
+        { name: 'Profile', path: '/profile', icon: <UserIcon size={20} /> },
     ];
 
     if (user.role === 'admin') {

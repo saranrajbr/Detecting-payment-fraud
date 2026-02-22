@@ -6,6 +6,8 @@ import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
 import TransactionSimulation from './pages/TransactionSimulation';
 import AdminPanel from './pages/AdminPanel';
+import ProfilePage from './pages/ProfilePage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import './App.css';
@@ -26,6 +28,11 @@ const App = () => {
                             <Route path="/" element={<LandingPage />} />
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/register" element={<RegisterPage />} />
+                            <Route path="/reset-password" element={<ResetPasswordPage />} />
+                            <Route
+                                path="/profile"
+                                element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" />}
+                            />
                             <Route
                                 path="/dashboard"
                                 element={isAuthenticated ? (isAdmin ? <Dashboard /> : <Navigate to="/simulate" />) : <Navigate to="/login" />}
