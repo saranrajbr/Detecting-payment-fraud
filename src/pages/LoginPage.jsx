@@ -62,6 +62,9 @@ const LoginPage = () => {
                 <p className="text-secondary text-center" style={{ marginTop: '0.5rem' }}>
                     Don't have an account? <Link to="/register" className="text-primary">Register</Link>
                 </p>
+                <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)', textAlign: 'center' }}>
+                    <Link to="/admin-login" style={{ color: 'var(--danger)', fontSize: '0.85rem', fontWeight: 'bold' }}>Staff/Admin Portal</Link>
+                </div>
             </div>
         </div>
     );
