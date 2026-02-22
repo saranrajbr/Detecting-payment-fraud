@@ -14,33 +14,23 @@ const TransactionSimulation = () => {
     });
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const [detectingIP, setDetectingIP] = useState(true);
 
-    React.useEffect(() => {
-        const detectIP = async () => {
-            try {
-                const response = await fetch('https://api.ipify.org?format=json');
-                const data = await response.json();
-                setFormData(prev => ({ ...prev, ipAddress: data.ip }));
-            } catch (err) {
-                console.error('IP detection failed', err);
-                setFormData(prev => ({ ...prev, ipAddress: '103.117.20.1' })); // Fallback to Indian IP
-            } finally {
-                setDetectingIP(false);
-            }
-        };
-        detectIP();
-    }, []);
+    // ... detectIP logic ...
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setResult(null);
+        setError(null);
         try {
             const { data } = await API.post('/transaction', formData);
             setResult(data);
         } catch (err) {
             console.error('Simulation error', err);
+            const msg = err.response?.data?.details || err.response?.data?.error || 'Server error. Please check your backend logs.';
+            setError(msg);
         } finally {
             setLoading(false);
         }
@@ -48,21 +38,21 @@ const TransactionSimulation = () => {
 
     return (
         <div className="page-container">
-            <h1 className="content-title">Fraud Detection Simulator (India Focus)</h1>
+            <h1 className="content-title">AI-Powered Fraud Detection (TensorFlow Engine)</h1>
 
             <div className="sim-grid">
                 <div className="card">
-                    <h3 className="card-title">Transaction Details</h3>
+                    <h3 className="card-title">Transaction Details (India Region)</h3>
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label className="form-label">Amount (₹)</label>
                             <input
-                                type="number"
+                                type="text"
                                 required
                                 className="form-input"
                                 value={formData.amount}
                                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                                placeholder="Enter amount in INR"
+                                placeholder="Enter amount (supports astronomical values)"
                             />
                         </div>
 
@@ -155,6 +145,16 @@ const TransactionSimulation = () => {
                 </div>
 
                 <div>
+                    {error && (
+                        <div className="card result-card" style={{ borderColor: 'var(--danger)', color: 'var(--danger)', marginBottom: '1rem' }}>
+                            <h3 className="card-title" style={{ color: 'var(--danger)' }}>⚠️ Proper Deployment Error</h3>
+                            <p className="small">{error}</p>
+                            <p className="small" style={{ marginTop: '10px', fontSize: '0.8rem', opacity: 0.8 }}>
+                                💡 Tip: Ensure <strong>MONGODB_URI</strong> is added to Vercel Environment Variables.
+                            </p>
+                        </div>
+                    )}
+
                     {result ? (
                         <div className="card result-card" style={{ borderColor: result.isFraud ? 'var(--danger)' : 'var(--success)' }}>
                             <h3 className="card-title">
