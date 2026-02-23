@@ -92,7 +92,9 @@ const Dashboard = () => {
                         <table className="table">
                             <thead>
                                 <tr>
+                                    {isAdmin && <th>User</th>}
                                     <th>Amount (₹)</th>
+                                    <th>Mobile</th>
                                     <th>Location</th>
                                     <th>Risk Rating</th>
                                     <th>Verdict</th>
@@ -101,7 +103,14 @@ const Dashboard = () => {
                             <tbody>
                                 {transactions.length > 0 ? transactions.map((t) => (
                                     <tr key={t._id}>
+                                        {isAdmin && (
+                                            <td>
+                                                <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-primary)' }}>{t.userId?.name || 'Unknown'}</div>
+                                                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{t.userId?.email || ''}</div>
+                                            </td>
+                                        )}
                                         <td style={{ fontWeight: 'bold' }}>₹{Number(t.amount || 0).toLocaleString('en-IN')}</td>
+                                        <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t.mobileNumber ? `+91 ${t.mobileNumber}` : '---'}</td>
                                         <td>{t.location}</td>
                                         <td>{Math.round((t.finalRiskScore || 0) * 100)}%</td>
                                         <td>
@@ -113,7 +122,7 @@ const Dashboard = () => {
                                         </td>
                                     </tr>
                                 )) : (
-                                    <tr><td colSpan="4" style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem' }}>No recent activity detected.</td></tr>
+                                    <tr><td colSpan={isAdmin ? '6' : '4'} style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem' }}>No recent activity detected.</td></tr>
                                 )}
                             </tbody>
                         </table>

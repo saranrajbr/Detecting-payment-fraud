@@ -20,6 +20,29 @@ const TransactionSimulation = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    // ─── TRAI Prefix Lookup Table (4-digit) ─────────────────────────────────
+    const TRAI_PREFIX_MAP = {
+        '9840': 'Tamil Nadu', '9841': 'Tamil Nadu', '9884': 'Tamil Nadu', '9894': 'Tamil Nadu',
+        '9944': 'Tamil Nadu', '9003': 'Tamil Nadu', '8939': 'Tamil Nadu', '6382': 'Tamil Nadu',
+        '9811': 'Delhi NCR', '9810': 'Delhi NCR', '9871': 'Delhi NCR', '9953': 'Delhi NCR',
+        '9899': 'Delhi NCR', '9312': 'Delhi NCR', '8826': 'Delhi NCR', '9999': 'Delhi NCR',
+        '9821': 'Mumbai', '9820': 'Mumbai', '9833': 'Mumbai', '8451': 'Mumbai',
+        '7030': 'Maharashtra', '7031': 'Maharashtra', '8208': 'Maharashtra', '9075': 'Maharashtra',
+        '9845': 'Karnataka', '9844': 'Karnataka', '9880': 'Karnataka', '9606': 'Karnataka',
+        '9866': 'Andhra Pradesh', '9848': 'Andhra Pradesh', '8008': 'Andhra Pradesh',
+        '9949': 'Telangana', '7013': 'Telangana', '8897': 'Telangana',
+        '9447': 'Kerala', '9446': 'Kerala', '8129': 'Kerala', '7012': 'Kerala',
+        '9830': 'West Bengal', '9831': 'West Bengal', '8013': 'West Bengal',
+        '9426': 'Gujarat', '9925': 'Gujarat', '9974': 'Gujarat', '6359': 'Gujarat',
+        '9413': 'Rajasthan', '9414': 'Rajasthan', '9829': 'Rajasthan',
+        '9839': 'UP West', '9412': 'UP East', '9415': 'UP East', '7905': 'UP East',
+        '9425': 'Madhya Pradesh', '9826': 'Madhya Pradesh', '9407': 'Chhattisgarh',
+        '9815': 'Punjab', '9814': 'Punjab', '9812': 'Haryana', '9813': 'Haryana',
+        '9939': 'Bihar', '9430': 'Bihar', '9437': 'Odisha', '9435': 'Assam',
+        '9816': 'Himachal Pradesh', '9882': 'J&K', '7006': 'J&K',
+    };
+    const VOIP_PREFIXES = ['1000', '0001', '9560', '9400'];
+
     const handleMobileChange = (e) => {
         const value = e.target.value.replace(/\D/g, '').slice(0, 10);
         setFormData({ ...formData, mobileNumber: value });
@@ -27,36 +50,29 @@ const TransactionSimulation = () => {
         if (value.length === 10) {
             setEngineStatus('Analyzing');
             setTimeout(() => {
-                const prefix = value.substring(0, 2);
                 const firstDigit = parseInt(value[0]);
-
-                // Engine v2.1: Sophisticated Simulation
-                let circle = 'Other Circle';
-                if (['98', '94', '97'].includes(prefix)) circle = 'Tamil Nadu';
-                else if (['99', '88'].includes(prefix)) circle = 'Delhi NCR';
-                else if (['91', '92', '93'].includes(prefix)) circle = 'Maharashtra';
-                else if (['77', '78', '79'].includes(prefix)) circle = 'Karnataka';
-                else if (['96', '95'].includes(prefix)) circle = 'Uttar Pradesh';
-
-                // Real-world check: Indian mobile numbers start with 6, 7, 8, or 9
                 const isInvalid = firstDigit < 6;
 
-                // Status check based on middle digits (simulating real network ping)
-                const middleDigit = parseInt(value[5]);
-                const mobileStatus = isInvalid ? 'Invalid Format' : (middleDigit === 0 || middleDigit === 9 ? 'Inactive' : 'Active');
+                // 4-digit prefix lookup → fallback to first digit
+                const prefix4 = value.substring(0, 4);
+                const circle = TRAI_PREFIX_MAP[prefix4]
+                    || (firstDigit === 6 ? 'Jio Coverage Area' : 'Other Circle');
 
-                // VoIP Detection for virtual ranges
-                const isVoip = value.startsWith('100') || value.startsWith('000') || (firstDigit < 6 && !isInvalid);
+                // VoIP check
+                const isVoip = VOIP_PREFIXES.some(p => value.startsWith(p));
 
-                const newStatus = {
+                // Status: digit sum mod 5 → gives ~80% Active realistically
+                const digitSum = value.split('').reduce((a, d) => a + parseInt(d), 0);
+                const mobileStatus = isInvalid ? 'Invalid Format' : (digitSum % 5 === 0 ? 'Inactive' : 'Active');
+
+                setFormData(prev => ({
+                    ...prev,
                     circle: isInvalid ? 'Unknown' : circle,
                     mobileStatus,
-                    isVoip: isVoip
-                };
-
-                setFormData(prev => ({ ...prev, ...newStatus }));
+                    isVoip
+                }));
                 setEngineStatus(isInvalid ? 'Invalid' : 'Verified');
-            }, 850);
+            }, 900);
         } else {
             setEngineStatus('Idle');
         }
