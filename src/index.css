@@ -504,6 +504,11 @@ button {
   color: white;
 }
 
+.engine-badge.invalid {
+  background: var(--danger);
+  color: white;
+}
+
 .engine-results-box {
   background: #fdfdfd;
   border: 1px dashed var(--accent-primary);
