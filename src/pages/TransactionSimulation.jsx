@@ -8,16 +8,16 @@ const TransactionSimulation = () => {
         location: 'Chennai, India',
         deviceType: 'Mobile App (iPhone 15)',
         merchantCategory: 'UPI Payment',
-        ipAddress: 'Loading...',
+        mobileNumber: '',
+        mobileStatus: 'Active',
+        circle: 'Tamil Nadu',
+        isVoip: false,
         paymentMethod: 'UPI',
         transactionTime: 'Noon'
     });
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [detectingIP, setDetectingIP] = useState(true);
-
-    // ... detectIP logic ...
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -38,100 +38,93 @@ const TransactionSimulation = () => {
 
     return (
         <div className="page-container">
-            <h1 className="content-title">AI-Powered Fraud Detection (TensorFlow Engine)</h1>
+            <h1 className="content-title">Mobile-First Fraud Analysis Engine</h1>
 
             <div className="sim-grid">
                 <div className="card">
-                    <h3 className="card-title">Transaction Details (India Region)</h3>
+                    <h3 className="card-title">Transaction & Subscriber Details</h3>
                     <form onSubmit={handleSubmit}>
-                        <div className="form-group">
-                            <label className="form-label">Amount (₹)</label>
-                            <input
-                                type="text"
-                                required
-                                className="form-input"
-                                value={formData.amount}
-                                onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                                placeholder="Enter amount (supports astronomical values)"
-                            />
+                        <div className="form-group-row">
+                            <div className="form-group">
+                                <label className="form-label">Amount (₹)</label>
+                                <input
+                                    type="text"
+                                    required
+                                    className="form-input"
+                                    value={formData.amount}
+                                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Mobile Number</label>
+                                <input
+                                    type="text"
+                                    required
+                                    className="form-input"
+                                    value={formData.mobileNumber}
+                                    onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
+                                    placeholder="10-digit number"
+                                />
+                            </div>
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label">Location</label>
-                            <select className="form-input" value={formData.location} onChange={(e) => setFormData({ ...formData, location: e.target.value })}>
-                                <optgroup label="India">
+                        <div className="form-group-row">
+                            <div className="form-group">
+                                <label className="form-label">Location</label>
+                                <select className="form-input" value={formData.location} onChange={(e) => setFormData({ ...formData, location: e.target.value })}>
                                     <option value="Chennai, India">Chennai, India</option>
                                     <option value="Mumbai, India">Mumbai, India</option>
                                     <option value="Delhi, India">Delhi, India</option>
                                     <option value="Bangalore, India">Bangalore, India</option>
-                                    <option value="Hyderabad, India">Hyderabad, India</option>
-                                    <option value="Kolkata, India">Kolkata, India</option>
-                                    <option value="Pune, India">Pune, India</option>
-                                    <option value="Ahmedabad, India">Ahmedabad, India</option>
-                                </optgroup>
-                                <optgroup label="International">
-                                    <option value="New York, USA">New York, USA</option>
-                                    <option value="London, UK">London, UK</option>
-                                    <option value="Dubai, UAE">Dubai, UAE</option>
-                                    <option value="Singapore">Singapore</option>
-                                    <option value="Paris, France">Paris, France</option>
-                                    <option value="Berlin, Germany">Berlin, Germany</option>
-                                </optgroup>
-                            </select>
+                                    <option value="International/VPN">International/VPN</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Telecom Circle</label>
+                                <select className="form-input" value={formData.circle} onChange={(e) => setFormData({ ...formData, circle: e.target.value })}>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Delhi NCR">Delhi NCR</option>
+                                    <option value="Karnataka">Karnataka</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                IP Address
-                                {detectingIP ? (
-                                    <span className="badge-detecting">Detecting...</span>
-                                ) : (
-                                    <span className="badge-detected">Auto-detected</span>
-                                )}
-                            </label>
-                            <input
-                                type="text"
-                                className="form-input"
-                                value={formData.ipAddress}
-                                onChange={(e) => setFormData({ ...formData, ipAddress: e.target.value })}
-                                placeholder="e.g. 103.117.x.x"
-                                disabled={detectingIP}
-                            />
-                            <small className="help-text">Indian IPs: 49.x, 103.x, 106.x, 117.x</small>
+                        <div className="form-group-row">
+                            <div className="form-group">
+                                <label className="form-label">Subscriber Status</label>
+                                <select className="form-input" value={formData.mobileStatus} onChange={(e) => setFormData({ ...formData, mobileStatus: e.target.value })}>
+                                    <option value="Active">Active (Live)</option>
+                                    <option value="Inactive">Inactive (Suspended)</option>
+                                    <option value="Ported Recently">Ported Recently</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">VoIP Detection</label>
+                                <select className="form-input" value={formData.isVoip} onChange={(e) => setFormData({ ...formData, isVoip: e.target.value === 'true' })}>
+                                    <option value="false">Real SIM Card</option>
+                                    <option value="true">VoIP / Virtual Number</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div className="form-group-row">
                             <div className="form-group">
                                 <label className="form-label">Payment Method</label>
                                 <select className="form-input" value={formData.paymentMethod} onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}>
-                                    <option value="UPI">UPI (BHIM/GPay/PhonePe)</option>
+                                    <option value="UPI">UPI (BHIM/GPay)</option>
                                     <option value="Rupay">Rupay Card</option>
                                     <option value="Visa">Visa Card</option>
-                                    <option value="Mastercard">Mastercard</option>
-                                    <option value="Net Banking">Net Banking</option>
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label className="form-label">Transaction Time</label>
-                                <select className="form-input" value={formData.transactionTime} onChange={(e) => setFormData({ ...formData, transactionTime: e.target.value })}>
-                                    <option value="Morning">Morning (6 AM - 12 PM)</option>
-                                    <option value="Noon">Noon (12 PM - 6 PM)</option>
-                                    <option value="Night">Night (6 PM - 12 AM)</option>
-                                    <option value="Late Night">Late Night (12 AM - 6 AM)</option>
+                                <label className="form-label">Terminal Info</label>
+                                <select className="form-input" value={formData.deviceType} onChange={(e) => setFormData({ ...formData, deviceType: e.target.value })}>
+                                    <option value="Mobile App (iPhone)">Mobile App (iPhone)</option>
+                                    <option value="Mobile App (Android)">Mobile App (Android)</option>
+                                    <option value="Emulator">Emulator (High Risk)</option>
                                 </select>
                             </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label className="form-label">Device & Terminal</label>
-                            <select className="form-input" value={formData.deviceType} onChange={(e) => setFormData({ ...formData, deviceType: e.target.value })}>
-                                <option value="Mobile App (iPhone 15)">Mobile App (iPhone 15)</option>
-                                <option value="Samsung Galaxy M34">Samsung Galaxy M34 (India)</option>
-                                <option value="OnePlus 11R">OnePlus 11R (India)</option>
-                                <option value="Desktop Browser">Desktop Browser</option>
-                                <option value="POS Terminal">POS Terminal</option>
-                                <option value="Emulator">Emulator (High Risk)</option>
-                            </select>
                         </div>
 
                         <button
@@ -139,7 +132,7 @@ const TransactionSimulation = () => {
                             disabled={loading}
                             className={`btn-primary btn-full ${loading ? 'btn-loading' : ''}`}
                         >
-                            {loading ? 'Analyzing Securely...' : 'Run Proper Risk Analysis'}
+                            {loading ? 'Analyzing Securely...' : 'Run Depth Verification'}
                         </button>
                     </form>
                 </div>

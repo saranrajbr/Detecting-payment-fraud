@@ -22,58 +22,56 @@ const ProfilePage = () => {
         fetchProfile();
     }, []);
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+    };
+
     if (loading) return <div className="page-container"><div className="loading-spinner">Loading Profile...</div></div>;
     if (error) return <div className="page-container"><div className="error-banner">{error}</div></div>;
 
     return (
         <div className="page-container animate-fade-in">
-            <h1 className="content-title">User Profile</h1>
+            <h1 className="content-title">Secured Account Profile</h1>
 
             <div className="card profile-card">
-                <div className="profile-header">
-                    <div className="profile-avatar">
-                        <User size={48} color="var(--accent-primary)" />
+                <div className="profile-hero">
+                    <div className="avatar-wrapper">
+                        <User size={64} className="hero-avatar-icon" />
                     </div>
-                    <div>
+                    <div className="hero-text">
                         <h2 className="profile-name">{profile.name}</h2>
-                        <span className={`badge ${profile.role === 'admin' ? 'badge-danger' : 'badge-success'}`}>
-                            {profile.role.toUpperCase()}
-                        </span>
+                        <div className={`role-tag ${profile.role}`}>
+                            <Shield size={14} style={{ marginRight: '6px' }} />
+                            {profile.role.toUpperCase()} ACCESS
+                        </div>
                     </div>
                 </div>
 
-                <div className="profile-details-grid">
-                    <div className="detail-item">
-                        <Mail size={20} className="detail-icon" />
-                        <div>
-                            <div className="detail-label">Email Address</div>
-                            <div className="detail-value">{profile.email}</div>
-                        </div>
-                    </div>
-
-                    <div className="detail-item">
-                        <Shield size={20} className="detail-icon" />
-                        <div>
-                            <div className="detail-label">Account Security</div>
-                            <div className="detail-value">Active (Role-Based Access)</div>
-                        </div>
-                    </div>
-
-                    <div className="detail-item">
-                        <Calendar size={20} className="detail-icon" />
-                        <div>
-                            <div className="detail-label">Member Since</div>
-                            <div className="detail-value">{new Date(profile.createdAt).toLocaleDateString()}</div>
-                        </div>
-                    </div>
+                <div className="profile-info-grid">
+                    <InfoRow icon={<Mail size={20} />} label="Registered Email" value={profile.email} />
+                    <InfoRow icon={<Calendar size={20} />} label="Security Activated" value={new Date(profile.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })} />
+                    <InfoRow icon={<Shield size={20} />} label="Authentication Status" value="JWT Verified" color="var(--success)" />
                 </div>
 
                 <div className="profile-actions">
-                    <button className="btn-secondary">Update Password</button>
+                    <button className="btn-secondary" onClick={() => alert('Password update feature coming soon.')}>Change Password</button>
+                    <button className="btn-danger" onClick={handleLogout}>Log Out Securely</button>
                 </div>
             </div>
         </div>
     );
 };
+
+const InfoRow = ({ icon, label, value, color }) => (
+    <div className="info-row">
+        <div className="info-icon-box">{icon}</div>
+        <div className="info-content">
+            <label className="info-label">{label}</label>
+            <div className="info-value" style={{ color: color || 'white' }}>{value}</div>
+        </div>
+    </div>
+);
 
 export default ProfilePage;

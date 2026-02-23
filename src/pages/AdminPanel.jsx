@@ -50,9 +50,9 @@ const AdminPanel = () => {
                             onChange={(e) => setThreshold(e.target.value)}
                         />
                         <div className="threshold-labels">
-                            <span>Strict (0.0)</span>
-                            <span className="text-primary">{threshold}</span>
-                            <span>Lenient (1.0)</span>
+                            <span>Highly Sensitive (0.0)</span>
+                            <span className="text-primary" style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{threshold}</span>
+                            <span>More Lenient (1.0)</span>
                         </div>
                     </div>
                     <button

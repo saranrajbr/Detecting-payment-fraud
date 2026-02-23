@@ -255,8 +255,15 @@ button {
 }
 
 /* Forms */
-.form-group {
+.form-group-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
   margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 0;
 }
 
 .form-label {
@@ -531,18 +538,118 @@ button {
   transform: scale(1.5);
 }
 
-/* Admin Features */
-.threshold-config {
-  margin-bottom: 2rem;
+/* Profile Page Enhancements */
+.profile-card {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0;
+  overflow: hidden;
 }
 
-.threshold-labels {
+.profile-hero {
+  background: var(--accent-gradient);
+  padding: 3.5rem 2.5rem;
   display: flex;
-  justify-content: space-between;
-  font-weight: 700;
+  align-items: center;
+  gap: 2rem;
+  color: white;
+}
+
+.avatar-wrapper {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 1.25rem;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.hero-avatar-icon {
+  color: white;
+}
+
+.hero-text .profile-name {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.role-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  border-radius: 30px;
   font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.role-tag.admin {
+  background: rgba(225, 29, 72, 0.3);
+  border-color: rgba(225, 29, 72, 0.4);
+}
+
+.profile-info-grid {
+  padding: 2.5rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+}
+
+.info-icon-box {
+  background: white;
+  padding: 0.75rem;
+  border-radius: 10px;
+  color: var(--accent-primary);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.info-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.info-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.profile-actions {
+  padding: 2rem 2.5rem;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+}
+
+.btn-danger:hover {
+  background: #be123c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
 }
 
 /* Utility */

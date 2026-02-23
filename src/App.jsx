@@ -8,9 +8,12 @@ import TransactionSimulation from './pages/TransactionSimulation';
 import AdminPanel from './pages/AdminPanel';
 import ProfilePage from './pages/ProfilePage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import AdminLoginPage from './pages/AdminLoginPage';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import './App.css';
+
+// Deployment v3.1.7 - Force Refresh - 2026-02-23T01:00:00Z
 
 const App = () => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -36,7 +39,7 @@ const App = () => {
                             />
                             <Route
                                 path="/dashboard"
-                                element={isAuthenticated ? (isAdmin ? <Dashboard /> : <Navigate to="/simulate" />) : <Navigate to="/login" />}
+                                element={isAuthenticated ? <Dashboard /> : <Navigate to="/admin-login" />}
                             />
                             <Route
                                 path="/simulate"

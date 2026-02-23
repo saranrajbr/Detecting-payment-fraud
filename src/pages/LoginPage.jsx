@@ -29,7 +29,7 @@ const LoginPage = () => {
     return (
         <div className="auth-container">
             <div className="card">
-                <h2 className="card-title text-center">Welcome Back</h2>
+                <h2 className="card-title text-center">User Login</h2>
                 {error && <div className="text-danger text-center" style={{ marginBottom: '1rem' }}>{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">

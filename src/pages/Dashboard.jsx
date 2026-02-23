@@ -24,8 +24,16 @@ const Dashboard = () => {
                 API.get('/transaction/stats'),
                 API.get('/transaction')
             ]);
-            setStats(statsRes.data);
-            setTransactions(transRes.data.slice(0, 10));
+
+            if (statsRes && statsRes.data) {
+                setStats(statsRes.data);
+            }
+
+            if (transRes && Array.isArray(transRes.data)) {
+                setTransactions(transRes.data.slice(0, 10));
+            } else {
+                setTransactions([]);
+            }
         } catch (err) {
             console.error('Error fetching dashboard data', err);
             setError('Failed to load transaction data. Please ensure you are logged in as an Admin.');
@@ -47,26 +55,45 @@ const Dashboard = () => {
         }]
     };
 
+    const user = JSON.parse(localStorage.getItem('user'));
+    const isAdmin = user?.role === 'admin';
+
     return (
         <div className="page-container animate-fade-in">
-            <h1 className="content-title">Admin Dashboard (India Region)</h1>
+            <h1 className="content-title">
+                {isAdmin ? 'Admin Intelligence Dashboard' : 'My Security Dashboard'}
+            </h1>
 
             <div className="stat-grid">
-                <StatCard icon={<Activity color="var(--accent-primary)" />} label="Total Activity" value={stats.totalTransactions} />
-                <StatCard icon={<ShieldAlert color="var(--danger)" />} label="Flagged Fraud" value={stats.fraudulentTransactions} />
-                <StatCard icon={<Percent color="var(--warning)" />} label="Current Risk Rate" value={`${stats.fraudRate}%`} />
+                <StatCard
+                    icon={<Activity color="var(--accent-primary)" />}
+                    label={isAdmin ? "Total System Activity" : "My Recent Activity"}
+                    value={stats.totalTransactions}
+                />
+                <StatCard
+                    icon={<ShieldAlert color="var(--danger)" />}
+                    label={isAdmin ? "Total Flagged Fraud" : "My Flagged Alerts"}
+                    value={stats.fraudulentTransactions}
+                />
+                <StatCard
+                    icon={<Percent color="var(--warning)" />}
+                    label="Risk Index"
+                    value={`${stats.fraudRate}%`}
+                />
             </div>
 
             <div className="data-grid">
                 <div className="card">
-                    <h3 className="card-title">Recent Transactions (₹)</h3>
+                    <h3 className="card-title">
+                        {isAdmin ? 'Recent Global Transactions' : 'My Recent Transactions'}
+                    </h3>
                     <div className="table-responsive">
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th>Amount</th>
+                                    <th>Amount (₹)</th>
                                     <th>Location</th>
-                                    <th>AI Score</th>
+                                    <th>Risk Rating</th>
                                     <th>Verdict</th>
                                 </tr>
                             </thead>
