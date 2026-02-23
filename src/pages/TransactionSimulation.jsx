@@ -27,16 +27,36 @@ const TransactionSimulation = () => {
         if (value.length === 10) {
             setEngineStatus('Analyzing');
             setTimeout(() => {
-                // Simulated Engine Logic
-                const firstDigit = value[0];
+                const prefix = value.substring(0, 2);
+                const firstDigit = parseInt(value[0]);
+
+                // Engine v2.1: Sophisticated Simulation
+                let circle = 'Other Circle';
+                if (['98', '94', '97'].includes(prefix)) circle = 'Tamil Nadu';
+                else if (['99', '88'].includes(prefix)) circle = 'Delhi NCR';
+                else if (['91', '92', '93'].includes(prefix)) circle = 'Maharashtra';
+                else if (['77', '78', '79'].includes(prefix)) circle = 'Karnataka';
+                else if (['96', '95'].includes(prefix)) circle = 'Uttar Pradesh';
+
+                // Real-world check: Indian mobile numbers start with 6, 7, 8, or 9
+                const isInvalid = firstDigit < 6;
+
+                // Status check based on middle digits (simulating real network ping)
+                const middleDigit = parseInt(value[5]);
+                const mobileStatus = isInvalid ? 'Invalid Format' : (middleDigit === 0 || middleDigit === 9 ? 'Inactive' : 'Active');
+
+                // VoIP Detection for virtual ranges
+                const isVoip = value.startsWith('100') || value.startsWith('000') || (firstDigit < 6 && !isInvalid);
+
                 const newStatus = {
-                    circle: firstDigit === '9' ? 'Tamil Nadu' : firstDigit === '8' ? 'Maharashtra' : 'Delhi NCR',
-                    mobileStatus: value.endsWith('0') ? 'Inactive' : 'Active',
-                    isVoip: value.startsWith('91') || value.includes('000')
+                    circle: isInvalid ? 'Unknown' : circle,
+                    mobileStatus,
+                    isVoip: isVoip
                 };
+
                 setFormData(prev => ({ ...prev, ...newStatus }));
-                setEngineStatus('Verified');
-            }, 800);
+                setEngineStatus(isInvalid ? 'Invalid' : 'Verified');
+            }, 850);
         } else {
             setEngineStatus('Idle');
         }
@@ -81,7 +101,8 @@ const TransactionSimulation = () => {
                                 />
                                 {engineStatus !== 'Idle' && (
                                     <div className={`engine-badge ${engineStatus.toLowerCase()}`}>
-                                        {engineStatus === 'Analyzing' ? 'Scanning...' : 'Verified ✓'}
+                                        {engineStatus === 'Analyzing' ? 'Scanning...' :
+                                            engineStatus === 'Invalid' ? 'Format Error ✖' : 'Verified ✓'}
                                     </div>
                                 )}
                             </div>
@@ -106,7 +127,9 @@ const TransactionSimulation = () => {
                                 </div>
                                 <div className="engine-item">
                                     <label>VoIP</label>
-                                    <div className="engine-val">{engineStatus === 'Verified' ? (formData.isVoip ? 'High-Risk detected' : 'Real Subscriber') : '---'}</div>
+                                    <div className="engine-val">
+                                        {engineStatus === 'Verified' ? (formData.isVoip ? 'High-Risk detected' : 'Standard Non-VoIP') : '---'}
+                                    </div>
                                 </div>
                             </div>
                         </div>
