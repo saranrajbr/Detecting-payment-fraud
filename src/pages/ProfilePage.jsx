@@ -22,6 +22,12 @@ const ProfilePage = () => {
         fetchProfile();
     }, []);
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+    };
+
     const [passwords, setPasswords] = useState({ currentPassword: '', newPassword: '' });
     const [updating, setUpdating] = useState(false);
     const [msg, setMsg] = useState({ type: '', text: '' });

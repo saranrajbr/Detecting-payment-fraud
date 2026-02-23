@@ -16,6 +16,9 @@ const TransactionSimulation = () => {
         transactionTime: 'Noon'
     });
     const [engineStatus, setEngineStatus] = useState('Idle'); // Idle, Analyzing, Verified
+    const [result, setResult] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const handleMobileChange = (e) => {
         const value = e.target.value.replace(/\D/g, '').slice(0, 10);
