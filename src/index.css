@@ -1116,3 +1116,123 @@ button {
     gap: 0.5rem;
   }
 }
+
+/* ════════════════════════════════════════════════════════
+   DASHBOARD — Layout & Chart Fixes
+   ════════════════════════════════════════════════════════ */
+
+/* Main 2-column grid: table takes 2fr, chart takes 1fr (max ~300px) */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr minmax(220px, 280px);
+  gap: 1.5rem;
+  align-items: start;
+  margin-top: 0;
+}
+
+/* Table: always horizontally scrollable */
+.table-scroll-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+
+.table-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: var(--glass-border);
+  border-radius: 10px;
+}
+
+/* Chart panel: compact, centered pie */
+.chart-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-wrapper {
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto 1rem;
+}
+
+/* Mini legend below chart */
+.chart-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.chart-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.825rem;
+  color: var(--text-secondary);
+}
+
+.chart-stat strong {
+  color: var(--text-primary);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-safe {
+  background: #10b981;
+}
+
+.dot-fraud {
+  background: #ef4444;
+}
+
+/* Responsive: stack chart below table */
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-panel {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .chart-wrapper {
+    max-width: 180px;
+    margin: 0;
+  }
+
+  .chart-summary {
+    flex: 1;
+    min-width: 120px;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .chart-wrapper {
+    max-width: 160px;
+  }
+
+  .table-scroll-wrapper {
+    max-height: none;
+  }
+}

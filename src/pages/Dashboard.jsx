@@ -82,13 +82,13 @@ const Dashboard = () => {
                 />
             </div>
 
-            <div className="data-grid responsive-grid">
-                <div className="card full-width-mobile">
+            <div className="dashboard-grid">
+                <div className="card">
                     <h3 className="card-title">
                         <List size={20} />
                         {isAdmin ? 'Recent Global Transactions' : 'My Recent Transactions'}
                     </h3>
-                    <div className="table-responsive">
+                    <div className="table-scroll-wrapper">
                         <table className="table">
                             <thead>
                                 <tr>
@@ -129,10 +129,31 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <div className="card">
-                    <h3 className="card-title">Fraud Probability Ratio</h3>
-                    <div className="chart-container">
-                        <Pie data={chartData} options={{ plugins: { legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { size: 12 } } } } }} />
+                <div className="card chart-panel">
+                    <h3 className="card-title">Fraud Ratio</h3>
+                    <div className="chart-wrapper">
+                        <Pie
+                            data={chartData}
+                            options={{
+                                maintainAspectRatio: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: { color: '#64748b', font: { size: 11 }, padding: 12 }
+                                    }
+                                }
+                            }}
+                        />
+                    </div>
+                    <div className="chart-summary">
+                        <div className="chart-stat">
+                            <span className="dot dot-safe"></span>
+                            <span>Safe: <strong>{stats.totalTransactions - stats.fraudulentTransactions}</strong></span>
+                        </div>
+                        <div className="chart-stat">
+                            <span className="dot dot-fraud"></span>
+                            <span>Fraud: <strong>{stats.fraudulentTransactions}</strong></span>
+                        </div>
                     </div>
                 </div>
             </div>
