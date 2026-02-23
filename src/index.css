@@ -865,3 +865,254 @@ button {
   background: white;
   border-color: #e2e8f0;
 }
+
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE — Tablet (≤ 1024px)
+   ════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .content {
+    padding: 2rem;
+  }
+
+  .content-title {
+    font-size: 1.75rem;
+  }
+
+  .sim-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .responsive-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE — Mobile (≤ 768px)
+   ════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Layout */
+  .main-layout {
+    flex-direction: column;
+  }
+
+  .content {
+    padding: 1.25rem;
+  }
+
+  .page-container {
+    padding-bottom: 2rem;
+  }
+
+  /* Sidebar → bottom nav strip */
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.75rem 0.5rem;
+    gap: 0.25rem;
+    border-right: none;
+    border-bottom: 1px solid var(--glass-border);
+    order: -1;
+  }
+
+  .sidebar-link {
+    padding: 0.6rem 0.875rem;
+    font-size: 0.8125rem;
+    gap: 0.5rem;
+  }
+
+  .sidebar-link span {
+    display: none;
+  }
+
+  /* Navbar */
+  .navbar {
+    padding: 1rem 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .nav-logo {
+    font-size: 1.2rem;
+  }
+
+  .nav-links {
+    gap: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  /* Typography */
+  .content-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Cards */
+  .card {
+    padding: 1.25rem;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  /* Stats grid */
+  .stat-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-value {
+    font-size: 1.4rem;
+  }
+
+  /* Forms */
+  .form-group-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .auth-container {
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+
+  /* Table: horizontal scroll */
+  .scroll-table {
+    overflow-x: auto;
+    max-height: none;
+    padding-right: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem 0.625rem;
+    font-size: 0.8125rem;
+    white-space: nowrap;
+  }
+
+  /* Engine grid */
+  .engine-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem;
+  }
+
+  /* Sim grid */
+  .sim-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 3rem 1rem 2rem;
+  }
+
+  .hero-title {
+    font-size: 2.25rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Result risk score */
+  .risk-value {
+    font-size: 2.75rem;
+  }
+
+  /* Badges in table */
+  .badge {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  /* Profile footer */
+  .profile-footer {
+    padding: 1rem;
+  }
+
+  /* Responsive grid */
+  .responsive-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE — Small Phones (≤ 480px)
+   ════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+
+  .content {
+    padding: 0.875rem;
+  }
+
+  .card {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .content-title {
+    font-size: 1.25rem;
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
+  }
+
+  .engine-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .sidebar-link span {
+    display: none;
+  }
+
+  .nav-logo span:last-child {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .btn-large {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .risk-value {
+    font-size: 2.25rem;
+  }
+
+  .auth-container {
+    margin: 1rem auto;
+  }
+
+  .mobile-input-wrapper {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}

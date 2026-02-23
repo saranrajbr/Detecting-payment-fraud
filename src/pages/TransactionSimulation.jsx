@@ -20,28 +20,99 @@ const TransactionSimulation = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // ─── TRAI Prefix Lookup Table (4-digit) ─────────────────────────────────
-    const TRAI_PREFIX_MAP = {
-        '9840': 'Tamil Nadu', '9841': 'Tamil Nadu', '9884': 'Tamil Nadu', '9894': 'Tamil Nadu',
-        '9944': 'Tamil Nadu', '9003': 'Tamil Nadu', '8939': 'Tamil Nadu', '6382': 'Tamil Nadu',
-        '9811': 'Delhi NCR', '9810': 'Delhi NCR', '9871': 'Delhi NCR', '9953': 'Delhi NCR',
-        '9899': 'Delhi NCR', '9312': 'Delhi NCR', '8826': 'Delhi NCR', '9999': 'Delhi NCR',
-        '9821': 'Mumbai', '9820': 'Mumbai', '9833': 'Mumbai', '8451': 'Mumbai',
-        '7030': 'Maharashtra', '7031': 'Maharashtra', '8208': 'Maharashtra', '9075': 'Maharashtra',
-        '9845': 'Karnataka', '9844': 'Karnataka', '9880': 'Karnataka', '9606': 'Karnataka',
-        '9866': 'Andhra Pradesh', '9848': 'Andhra Pradesh', '8008': 'Andhra Pradesh',
-        '9949': 'Telangana', '7013': 'Telangana', '8897': 'Telangana',
-        '9447': 'Kerala', '9446': 'Kerala', '8129': 'Kerala', '7012': 'Kerala',
-        '9830': 'West Bengal', '9831': 'West Bengal', '8013': 'West Bengal',
-        '9426': 'Gujarat', '9925': 'Gujarat', '9974': 'Gujarat', '6359': 'Gujarat',
-        '9413': 'Rajasthan', '9414': 'Rajasthan', '9829': 'Rajasthan',
-        '9839': 'UP West', '9412': 'UP East', '9415': 'UP East', '7905': 'UP East',
-        '9425': 'Madhya Pradesh', '9826': 'Madhya Pradesh', '9407': 'Chhattisgarh',
-        '9815': 'Punjab', '9814': 'Punjab', '9812': 'Haryana', '9813': 'Haryana',
-        '9939': 'Bihar', '9430': 'Bihar', '9437': 'Odisha', '9435': 'Assam',
-        '9816': 'Himachal Pradesh', '9882': 'J&K', '7006': 'J&K',
+    // ─── Mobile Intelligence Engine v3.0 ──────────────────────────────────────
+    // Maps 4-digit prefixes to { operator, circle } based on TRAI allocations
+    const getMobileInfo = (number) => {
+        const p4 = number.substring(0, 4);
+        const p3 = number.substring(0, 3);
+        const p2 = number.substring(0, 2);
+        const first = parseInt(number[0]);
+
+        // Invalid: Indian mobile numbers must start with 6-9
+        if (first < 6) return { operator: 'Invalid', circle: 'Unknown', isVoip: false, status: 'Invalid Format' };
+
+        // ── Jio (Reliance) – covers most of the 6x series and some 7x/8x ──
+        const jioMap = {
+            '600': 'Andhra Pradesh', '601': 'Delhi', '602': 'Tamil Nadu',
+            '603': 'Maharashtra', '604': 'Karnataka', '605': 'UP East',
+            '606': 'Rajasthan', '607': 'West Bengal', '608': 'MP',
+            '609': 'Kerala',
+            '620': 'Tamil Nadu', '621': 'Delhi', '622': 'AP',
+            '623': 'Gujarat', '624': 'Bihar', '625': 'Rajasthan',
+            '626': 'Karnataka', '627': 'UP East', '628': 'MP',
+            '629': 'West Bengal',
+            '630': 'Tamil Nadu', '631': 'Andhra Pradesh', '632': 'Kerala',
+            '633': 'Tamil Nadu', '634': 'Maharashtra', '635': 'Karnataka',
+            '636': 'Gujarat', '637': 'UP East', '638': 'Rajasthan',
+            '639': 'West Bengal',
+            '700': 'Delhi', '701': 'Maharashtra', '702': 'Karnataka',
+            '703': 'Tamil Nadu', '704': 'AP', '705': 'UP West',
+            '706': 'Gujarat', '707': 'Rajasthan', '708': 'Kerala',
+            '709': 'Punjab',
+            '800': 'Delhi', '801': 'UP East', '802': 'MP',
+            '803': 'Bihar', '804': 'Karnataka', '805': 'Rajasthan',
+            '806': 'Tamil Nadu', '807': 'Haryana', '808': 'Maharashtra',
+            '809': 'AP',
+            '890': 'Tamil Nadu', '891': 'AP', '892': 'Karnataka',
+            '893': 'Odisha', '894': 'Bihar',
+        };
+        if (jioMap[p3]) return { operator: 'Jio', circle: jioMap[p3], isVoip: false, status: null };
+        if (p2 === '60' || p2 === '61' || p2 === '62' || p2 === '63' || p2 === '64' || p2 === '65' || p2 === '66')
+            return { operator: 'Jio', circle: 'Pan-India (Jio)', isVoip: false, status: null };
+
+        // ── Airtel ──
+        const airtelMap = {
+            '9810': 'Delhi NCR', '9811': 'Delhi NCR', '9871': 'Delhi NCR', '9999': 'Delhi NCR',
+            '9820': 'Mumbai', '9821': 'Mumbai', '9833': 'Mumbai',
+            '9840': 'Tamil Nadu', '9841': 'Tamil Nadu', '9884': 'Tamil Nadu',
+            '9845': 'Karnataka', '9880': 'Karnataka',
+            '9848': 'AP', '9866': 'AP',
+            '9447': 'Kerala', '9446': 'Kerala',
+            '9830': 'West Bengal', '9831': 'West Bengal',
+            '9426': 'Gujarat', '9925': 'Gujarat',
+            '9413': 'Rajasthan', '9414': 'Rajasthan',
+            '9415': 'UP East', '9412': 'UP East',
+            '9426': 'Gujarat',
+            '9815': 'Punjab', '9814': 'Punjab',
+            '9812': 'Haryana', '9813': 'Haryana',
+            '9430': 'Bihar', '9939': 'Bihar',
+            '9816': 'Himachal Pradesh',
+            '9437': 'Odisha', '9435': 'Assam',
+            '9882': 'J&K',
+        };
+        if (airtelMap[p4]) return { operator: 'Airtel', circle: airtelMap[p4], isVoip: false, status: null };
+        if (p2 === '98' || p2 === '94') return { operator: 'Airtel', circle: 'Pan-India (Airtel)', isVoip: false, status: null };
+
+        // ── Vi (Vodafone-Idea) ──
+        const viMap = {
+            '9212': 'Delhi NCR', '9911': 'Delhi NCR',
+            '9819': 'Mumbai', '9322': 'Mumbai',
+            '9942': 'Tamil Nadu', '9003': 'Tamil Nadu',
+            '9886': 'Karnataka', '9844': 'Karnataka',
+            '9949': 'Telangana',
+            '8129': 'Kerala', '9496': 'Kerala',
+            '9007': 'West Bengal',
+            '9712': 'Gujarat', '9427': 'Gujarat',
+            '9829': 'Rajasthan',
+            '9839': 'UP West',
+            '9826': 'MP',
+            '9878': 'Punjab',
+            '9872': 'Punjab',
+        };
+        if (viMap[p4]) return { operator: 'Vi (Vodafone-Idea)', circle: viMap[p4], isVoip: false, status: null };
+        if (p2 === '99' || p2 === '82' || (p2 >= '70' && p2 <= '79'))
+            return { operator: 'Vi (Vodafone-Idea)', circle: 'Pan-India (Vi)', isVoip: false, status: null };
+
+        // ── BSNL ──
+        if (p2 === '94' || p2 === '87' || p2 === '85')
+            return { operator: 'BSNL', circle: 'Pan-India (BSNL)', isVoip: false, status: null };
+
+        // ── VoIP ──
+        if (['100', '000'].some(v => number.startsWith(v)))
+            return { operator: 'VoIP/Virtual', circle: 'Unknown', isVoip: true, status: 'Flagged' };
+
+        return { operator: 'Unknown Operator', circle: 'Other Circle', isVoip: false, status: null };
     };
-    const VOIP_PREFIXES = ['1000', '0001', '9560', '9400'];
 
     const handleMobileChange = (e) => {
         const value = e.target.value.replace(/\D/g, '').slice(0, 10);
@@ -50,27 +121,14 @@ const TransactionSimulation = () => {
         if (value.length === 10) {
             setEngineStatus('Analyzing');
             setTimeout(() => {
-                const firstDigit = parseInt(value[0]);
-                const isInvalid = firstDigit < 6;
+                const { operator, circle, isVoip, status } = getMobileInfo(value);
+                const isInvalid = operator === 'Invalid';
 
-                // 4-digit prefix lookup → fallback to first digit
-                const prefix4 = value.substring(0, 4);
-                const circle = TRAI_PREFIX_MAP[prefix4]
-                    || (firstDigit === 6 ? 'Jio Coverage Area' : 'Other Circle');
-
-                // VoIP check
-                const isVoip = VOIP_PREFIXES.some(p => value.startsWith(p));
-
-                // Status: digit sum mod 5 → gives ~80% Active realistically
+                // Status: digit sum mod 5 → ~80% Active
                 const digitSum = value.split('').reduce((a, d) => a + parseInt(d), 0);
-                const mobileStatus = isInvalid ? 'Invalid Format' : (digitSum % 5 === 0 ? 'Inactive' : 'Active');
+                const mobileStatus = status || (digitSum % 5 === 0 ? 'Inactive' : 'Active');
 
-                setFormData(prev => ({
-                    ...prev,
-                    circle: isInvalid ? 'Unknown' : circle,
-                    mobileStatus,
-                    isVoip
-                }));
+                setFormData(prev => ({ ...prev, circle, mobileStatus, isVoip, operator }));
                 setEngineStatus(isInvalid ? 'Invalid' : 'Verified');
             }, 900);
         } else {
@@ -130,7 +188,13 @@ const TransactionSimulation = () => {
                                 <Smartphone size={16} />
                                 <span>Engine Insights</span>
                             </div>
-                            <div className="engine-grid">
+                            <div className="engine-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+                                <div className="engine-item">
+                                    <label>Operator</label>
+                                    <div className="engine-val" style={{ color: 'var(--accent-primary)' }}>
+                                        {engineStatus === 'Verified' ? (formData.operator || '---') : '---'}
+                                    </div>
+                                </div>
                                 <div className="engine-item">
                                     <label>Circle</label>
                                     <div className="engine-val">{engineStatus === 'Verified' ? formData.circle : '---'}</div>
@@ -144,7 +208,7 @@ const TransactionSimulation = () => {
                                 <div className="engine-item">
                                     <label>VoIP</label>
                                     <div className="engine-val">
-                                        {engineStatus === 'Verified' ? (formData.isVoip ? 'High-Risk detected' : 'Standard Non-VoIP') : '---'}
+                                        {engineStatus === 'Verified' ? (formData.isVoip ? 'High-Risk' : 'Standard') : '---'}
                                     </div>
                                 </div>
                             </div>
