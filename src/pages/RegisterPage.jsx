@@ -5,15 +5,19 @@ import API from '../services/api';
 const RegisterPage = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError('');
         try {
             await API.post('/auth/register', formData);
             navigate('/login');
         } catch (err) {
             setError(err.response?.data?.error || 'Registration failed');
+            setLoading(false);
         }
     };
 
@@ -53,8 +57,8 @@ const RegisterPage = () => {
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                         />
                     </div>
-                    <button type="submit" className="btn-primary btn-full">
-                        Register
+                    <button type="submit" disabled={loading} className={`btn-primary btn-full ${loading ? 'btn-loading' : ''}`}>
+                        {loading ? 'Registering Account...' : 'Register'}
                     </button>
                 </form>
                 <p className="text-secondary text-center" style={{ marginTop: '1.5rem' }}>
