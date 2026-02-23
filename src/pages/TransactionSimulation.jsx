@@ -15,9 +15,29 @@ const TransactionSimulation = () => {
         paymentMethod: 'UPI',
         transactionTime: 'Noon'
     });
-    const [result, setResult] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [engineStatus, setEngineStatus] = useState('Idle'); // Idle, Analyzing, Verified
+
+    const handleMobileChange = (e) => {
+        const value = e.target.value.replace(/\D/g, '').slice(0, 10);
+        setFormData({ ...formData, mobileNumber: value });
+
+        if (value.length === 10) {
+            setEngineStatus('Analyzing');
+            setTimeout(() => {
+                // Simulated Engine Logic
+                const firstDigit = value[0];
+                const newStatus = {
+                    circle: firstDigit === '9' ? 'Tamil Nadu' : firstDigit === '8' ? 'Maharashtra' : 'Delhi NCR',
+                    mobileStatus: value.endsWith('0') ? 'Inactive' : 'Active',
+                    isVoip: value.startsWith('91') || value.includes('000')
+                };
+                setFormData(prev => ({ ...prev, ...newStatus }));
+                setEngineStatus('Verified');
+            }, 800);
+        } else {
+            setEngineStatus('Idle');
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -38,33 +58,75 @@ const TransactionSimulation = () => {
 
     return (
         <div className="page-container">
-            <h1 className="content-title">Mobile-First Fraud Analysis Engine</h1>
+            <h1 className="content-title">Mobile Verification Engine 2.0</h1>
 
             <div className="sim-grid">
                 <div className="card">
-                    <h3 className="card-title">Transaction & Subscriber Details</h3>
+                    <h3 className="card-title">Transaction & Subscriber Input</h3>
                     <form onSubmit={handleSubmit}>
-                        <div className="form-group-row">
-                            <div className="form-group">
-                                <label className="form-label">Amount (₹)</label>
+                        <div className="form-group">
+                            <label className="form-label">Enter Mobile Number</label>
+                            <div className="mobile-input-wrapper">
+                                <span className="country-code">+91</span>
                                 <input
                                     type="text"
+                                    required
+                                    className="form-input mobile-field"
+                                    value={formData.mobileNumber}
+                                    onChange={handleMobileChange}
+                                    placeholder="98765 43210"
+                                />
+                                {engineStatus !== 'Idle' && (
+                                    <div className={`engine-badge ${engineStatus.toLowerCase()}`}>
+                                        {engineStatus === 'Analyzing' ? 'Scanning...' : 'Verified ✓'}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Real-time Engine Results Displayed Below Number */}
+                        <div className="engine-results-box animate-fade-in">
+                            <div className="engine-header">
+                                <Smartphone size={16} />
+                                <span>Engine Insights</span>
+                            </div>
+                            <div className="engine-grid">
+                                <div className="engine-item">
+                                    <label>Circle</label>
+                                    <div className="engine-val">{engineStatus === 'Verified' ? formData.circle : '---'}</div>
+                                </div>
+                                <div className="engine-item">
+                                    <label>Status</label>
+                                    <div className={`engine-val ${formData.mobileStatus === 'Active' ? 'text-success' : 'text-danger'}`}>
+                                        {engineStatus === 'Verified' ? formData.mobileStatus : '---'}
+                                    </div>
+                                </div>
+                                <div className="engine-item">
+                                    <label>VoIP</label>
+                                    <div className="engine-val">{engineStatus === 'Verified' ? (formData.isVoip ? 'High-Risk detected' : 'Real Subscriber') : '---'}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="form-group-row" style={{ marginTop: '1.5rem' }}>
+                            <div className="form-group">
+                                <label className="form-label">Transaction Amount (₹)</label>
+                                <input
+                                    type="number"
                                     required
                                     className="form-input"
                                     value={formData.amount}
                                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                                    placeholder="e.g. 50000"
                                 />
                             </div>
                             <div className="form-group">
-                                <label className="form-label">Mobile Number</label>
-                                <input
-                                    type="text"
-                                    required
-                                    className="form-input"
-                                    value={formData.mobileNumber}
-                                    onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
-                                    placeholder="10-digit number"
-                                />
+                                <label className="form-label">Auth Method</label>
+                                <select className="form-input" value={formData.paymentMethod} onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}>
+                                    <option value="UPI">UPI (BHIM/GPay)</option>
+                                    <option value="Rupay">Rupay Card</option>
+                                    <option value="Visa">Visa Card</option>
+                                </select>
                             </div>
                         </div>
 
@@ -80,45 +142,7 @@ const TransactionSimulation = () => {
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label className="form-label">Telecom Circle</label>
-                                <select className="form-input" value={formData.circle} onChange={(e) => setFormData({ ...formData, circle: e.target.value })}>
-                                    <option value="Tamil Nadu">Tamil Nadu</option>
-                                    <option value="Maharashtra">Maharashtra</option>
-                                    <option value="Delhi NCR">Delhi NCR</option>
-                                    <option value="Karnataka">Karnataka</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="form-group-row">
-                            <div className="form-group">
-                                <label className="form-label">Subscriber Status</label>
-                                <select className="form-input" value={formData.mobileStatus} onChange={(e) => setFormData({ ...formData, mobileStatus: e.target.value })}>
-                                    <option value="Active">Active (Live)</option>
-                                    <option value="Inactive">Inactive (Suspended)</option>
-                                    <option value="Ported Recently">Ported Recently</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">VoIP Detection</label>
-                                <select className="form-input" value={formData.isVoip} onChange={(e) => setFormData({ ...formData, isVoip: e.target.value === 'true' })}>
-                                    <option value="false">Real SIM Card</option>
-                                    <option value="true">VoIP / Virtual Number</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="form-group-row">
-                            <div className="form-group">
-                                <label className="form-label">Payment Method</label>
-                                <select className="form-input" value={formData.paymentMethod} onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}>
-                                    <option value="UPI">UPI (BHIM/GPay)</option>
-                                    <option value="Rupay">Rupay Card</option>
-                                    <option value="Visa">Visa Card</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">Terminal Info</label>
+                                <label className="form-label">Device Info</label>
                                 <select className="form-input" value={formData.deviceType} onChange={(e) => setFormData({ ...formData, deviceType: e.target.value })}>
                                     <option value="Mobile App (iPhone)">Mobile App (iPhone)</option>
                                     <option value="Mobile App (Android)">Mobile App (Android)</option>
@@ -129,10 +153,11 @@ const TransactionSimulation = () => {
 
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={loading || engineStatus !== 'Verified'}
                             className={`btn-primary btn-full ${loading ? 'btn-loading' : ''}`}
+                            style={{ marginTop: '1rem' }}
                         >
-                            {loading ? 'Analyzing Securely...' : 'Run Depth Verification'}
+                            {loading ? 'Finalizing Fraud Analysis...' : 'Process Full Verification'}
                         </button>
                     </form>
                 </div>

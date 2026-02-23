@@ -8,16 +8,17 @@
   --accent-primary: #10b981;
   --accent-secondary: #059669;
   --accent-gradient: linear-gradient(135deg, #10b981 0%, #065f46 100%);
-  --text-primary: #1e293b;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-dark: #000000;
   --danger: #e11d48;
   --danger-soft: #fff1f2;
   --warning: #f59e0b;
   --success: #10b981;
   --success-soft: #f0fdf4;
-  --glass-border: #e2e8f0;
-  --glass-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+  --glass-border: #cbd5e1;
+  --glass-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -334,15 +335,21 @@ button {
   color: var(--text-primary);
 }
 
-.data-grid {
+.responsive-grid {
   display: grid;
-  grid-template-columns: minmax(300px, 2.2fr) minmax(200px, 1fr);
+  grid-template-columns: 2fr 1fr;
   gap: 2rem;
-  margin-bottom: 3rem;
+  align-items: start;
 }
 
-.admin-grid {
-  grid-template-columns: 1fr 1.8fr;
+@media (max-width: 1024px) {
+  .responsive-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.full-width-mobile {
+  width: 100%;
 }
 
 .table {
@@ -456,10 +463,99 @@ button {
 }
 
 /* Simulation Features */
-.sim-grid {
+/* Simulator Engine Improvements */
+.mobile-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.country-code {
+  background: var(--bg-deep);
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--glass-border);
+  border-right: none;
+  border-radius: 10px 0 0 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.mobile-field {
+  border-radius: 0 10px 10px 0 !important;
+}
+
+.engine-badge {
+  position: absolute;
+  right: 1rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+.engine-badge.analyzing {
+  background: var(--warning);
+  color: white;
+  animation: pulse 1.5s infinite;
+}
+
+.engine-badge.verified {
+  background: var(--success);
+  color: white;
+}
+
+.engine-results-box {
+  background: #fdfdfd;
+  border: 1px dashed var(--accent-primary);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.engine-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+  margin-bottom: 1rem;
+}
+
+.engine-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.engine-item label {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.engine-val {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 .result-card {
@@ -673,10 +769,94 @@ button {
   color: var(--text-secondary);
 }
 
+.text-dark {
+  color: var(--text-dark) !important;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
 
 .no-margin {
   margin: 0;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+/* Dashboard & Profile Layouts */
+.profile-layout-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .profile-layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.no-padding {
+  padding: 0 !important;
+}
+
+.profile-footer {
+  padding: 1.5rem 2.5rem;
+  background: var(--bg-deep);
+  display: flex;
+  justify-content: center;
+}
+
+.btn-danger-ghost {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  padding: 0.6rem 2rem;
+}
+
+.btn-danger-ghost:hover {
+  background: var(--danger);
+  color: white;
+}
+
+.alert-banner {
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  margin-bottom: 1.5rem;
+}
+
+.alert-banner.success {
+  background: var(--success-soft);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.alert-banner.error {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.mini-badge {
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  text-transform: uppercase;
+  margin-left: auto;
+}
+
+.mini-badge.success {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.info-row.high-contrast {
+  background: white;
+  border-color: #e2e8f0;
 }

@@ -82,9 +82,10 @@ const Dashboard = () => {
                 />
             </div>
 
-            <div className="data-grid">
-                <div className="card">
+            <div className="data-grid responsive-grid">
+                <div className="card full-width-mobile">
                     <h3 className="card-title">
+                        <List size={20} />
                         {isAdmin ? 'Recent Global Transactions' : 'My Recent Transactions'}
                     </h3>
                     <div className="table-responsive">
@@ -100,19 +101,19 @@ const Dashboard = () => {
                             <tbody>
                                 {transactions.length > 0 ? transactions.map((t) => (
                                     <tr key={t._id}>
-                                        <td style={{ fontWeight: 'bold' }}>₹{Number(t.amount).toLocaleString('en-IN')}</td>
+                                        <td style={{ fontWeight: 'bold' }}>₹{Number(t.amount || 0).toLocaleString('en-IN')}</td>
                                         <td>{t.location}</td>
-                                        <td>{Math.round(t.finalRiskScore * 100)}%</td>
+                                        <td>{Math.round((t.finalRiskScore || 0) * 100)}%</td>
                                         <td>
                                             <span className={`badge ${t.actionTaken === 'Approve' ? 'badge-success' :
                                                 t.actionTaken === 'Block' ? 'badge-danger' : 'badge-warning'
                                                 }`}>
-                                                {t.actionTaken}
+                                                {t.actionTaken || 'N/A'}
                                             </span>
                                         </td>
                                     </tr>
                                 )) : (
-                                    <tr><td colSpan="4" style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>No transactions available yet.</td></tr>
+                                    <tr><td colSpan="4" style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem' }}>No recent activity detected.</td></tr>
                                 )}
                             </tbody>
                         </table>
