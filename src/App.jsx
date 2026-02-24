@@ -28,10 +28,10 @@ const App = () => {
                     {isAuthenticated && <Sidebar />}
                     <main className="content">
                         <Routes>
-                            <Route path="/" element={<LandingPage />} />
-                            <Route path="/login" element={<LoginPage />} />
-                            <Route path="/admin-login" element={<AdminLoginPage />} />
-                            <Route path="/register" element={<RegisterPage />} />
+                            <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <LandingPage />} />
+                            <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <LoginPage />} />
+                            <Route path="/admin-login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <AdminLoginPage />} />
+                            <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" /> : <RegisterPage />} />
                             <Route path="/reset-password" element={<ResetPasswordPage />} />
                             <Route
                                 path="/profile"
