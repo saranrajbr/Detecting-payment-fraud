@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import API from '../services/api';
 import { User, Mail, Shield, Calendar } from 'lucide-react';
 
 const ProfilePage = () => {
+    const navigate = useNavigate();
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -25,7 +27,8 @@ const ProfilePage = () => {
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        window.location.href = '/login';
+        navigate('/login');
+        window.location.reload();
     };
 
     const [passwords, setPasswords] = useState({ currentPassword: '', newPassword: '' });
