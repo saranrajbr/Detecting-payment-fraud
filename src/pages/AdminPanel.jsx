@@ -28,6 +28,53 @@ const AdminPanel = () => {
         }
     };
 
+    const handleExportCSV = () => {
+        if (logs.length === 0) {
+            alert('No data to export.');
+            return;
+        }
+
+        const headers = [
+            'Date', 'Time', 'User ID', 'Amount ($)', 'Location', 'Device Type',
+            'Merchant Category', 'Mobile Number', 'Circle', 'ML Risk Score',
+            'Rule Risk Score', 'Final Risk Score (%)', 'Is Fraud', 'Action Taken'
+        ];
+
+        const rows = logs.map(log => {
+            const userId = typeof log.userId === 'string'
+                ? log.userId
+                : log.userId?._id || 'N/A';
+            const date = new Date(log.createdAt);
+            return [
+                date.toLocaleDateString(),
+                date.toLocaleTimeString(),
+                userId,
+                log.amount,
+                log.location || '',
+                log.deviceType || '',
+                log.merchantCategory || '',
+                log.mobileNumber || '',
+                log.circle || '',
+                (log.mlRiskScore ?? 0).toFixed(4),
+                (log.ruleRiskScore ?? 0).toFixed(2),
+                ((log.finalRiskScore ?? 0) * 100).toFixed(0),
+                log.isFraud ? 'Yes' : 'No',
+                log.actionTaken || ''
+            ].map(v => `"${String(v).replace(/"/g, '""')}"`);
+        });
+
+        const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `fraud_audit_logs_${new Date().toISOString().slice(0, 10)}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <div>
             <h1 className="content-title">Admin Control Panel</h1>
@@ -68,7 +115,7 @@ const AdminPanel = () => {
                             <FileText size={20} />
                             System Audit Logs
                         </h3>
-                        <button className="btn-logout btn-small">
+                        <button className="btn-primary btn-small" onClick={handleExportCSV} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
                             <Download size={16} />
                             Export CSV
                         </button>
