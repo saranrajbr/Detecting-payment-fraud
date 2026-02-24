@@ -89,7 +89,7 @@ const AdminPanel = () => {
                                 {logs.map((log) => (
                                     <tr key={log._id}>
                                         <td>{new Date(log.createdAt).toLocaleTimeString()}</td>
-                                        <td className="text-secondary">{log.userId.substring(0, 8)}...</td>
+                                        <td className="text-secondary">{log.userId?.name || String(log.userId?._id || log.userId || '').substring(0, 8) + '...'}</td>
                                         <td>${log.amount}</td>
                                         <td className={log.isFraud ? 'text-danger' : 'text-success'}>
                                             {(log.finalRiskScore * 100).toFixed(0)}%
